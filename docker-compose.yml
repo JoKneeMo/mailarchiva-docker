@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  mailarchiva:
+    image: jokneemo/mailarchiva:8.11.8
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./config/config:/etc/opt/mailarchiva
+      - ./config/appdata:/var/opt/mailarchiva
+    environment:
+      CATALINA_OPTS: -Dproxy=yes
+    ports:
+      - 8091:8091/tcp # SMTP
+      - 8092:8092/tcp # Milter

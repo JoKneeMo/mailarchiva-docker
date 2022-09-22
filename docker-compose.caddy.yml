@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    command: caddy reverse-proxy --from https://mailarchiva.example.com --to http://mailarchiva:8080
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+    volumes:
+      - caddy_data:/data
+    links:
+      - mailarchiva
+
+  mailarchiva:
+    expose:
+      - "8080"
+
+volumes:
+    caddy_data:
+      external: true

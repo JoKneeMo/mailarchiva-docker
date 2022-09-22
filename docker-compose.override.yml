@@ -1,0 +1,9 @@
+# This override file is only ingested to docker compose when -f is NOT specified.
+# It exists here to allow use of the system without a reverse-proxy in front.
+# e.g. `docker compose up -d`
+version: "3.7"
+
+services:
+  mailarchiva:
+    ports:
+      - 8080:8080/tcp

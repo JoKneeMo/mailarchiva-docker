@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  mailarchiva:
+    expose:
+      - "8080"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.mailarchiva.rule=Host(`mailarchiva.example.com`)
+      - traefik.http.routers.mailarchiva.entrypoints=websecure
+      - traefik.http.routers.mailarchiva.tls.certresolver=letsencrypt
+      - traefik.http.routers.mailarchiva.tls.domains[0].main=mailarchiva.example.com
+      - traefik.http.routers.mailarchiva.service=mailarchiva-frontend
+      - traefik.http.services.mailarchiva-frontend.loadbalancer.server.port=8080
