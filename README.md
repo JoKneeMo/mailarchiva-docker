@@ -63,7 +63,7 @@ docker compose -f docker-compose.yml -f docker-compose.traefik.yml up -d
 If you don't want to clone this repo, below is a basic file using the latest
 version available.
 
-```json
+```yaml
 version: "3.7"
 
 services:
