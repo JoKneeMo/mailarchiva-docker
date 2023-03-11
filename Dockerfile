@@ -1,9 +1,9 @@
 FROM tomcat:jre8 as builder
 
 LABEL maintainer="JoKneeMo <https://github.com/JoKneeMo>"
-LABEL version="8.11.26"
+LABEL version="8.11.27"
 
-ARG MAILARCHIVA_VERSION=8.11.26
+ARG MAILARCHIVA_VERSION=8.11.27
 ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /build
@@ -24,6 +24,10 @@ RUN sed -i 's|Connector port=\"8080\" protocol=\"HTTP\/1.1\"|Connector port=\"80
 
 
 FROM tomcat:jre8 as runtime
+
+RUN apt update && apt install -y fontconfig-config \
+    && apt autoremove --purge -y && apt clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY --from=builder /usr/local/tomcat/webapps/ROOT/ /usr/local/tomcat/webapps/ROOT/
 COPY --from=builder /usr/local/tomcat/conf/server.xml /usr/local/tomcat/conf/server.xml
