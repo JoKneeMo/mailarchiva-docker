@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   mailarchiva:
-    image: jokneemo/mailarchiva:8.11.60
+    image: jokneemo/mailarchiva:8.11.63
     restart: unless-stopped
     build:
       context: .
