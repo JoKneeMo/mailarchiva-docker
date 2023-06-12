@@ -1,9 +1,9 @@
 FROM tomcat:jre8 as builder
 
 LABEL maintainer="JoKneeMo <https://github.com/JoKneeMo>"
-LABEL version="8.11.65"
+LABEL version="8.11.68"
 
-ARG MAILARCHIVA_VERSION=8.11.65
+ARG MAILARCHIVA_VERSION=8.11.68
 ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /build
