@@ -1,4 +1,4 @@
-name: Build and Deploy Docker Container on New Release
+name: Update Dockerfile on New Release
 
 on:
   schedule:
