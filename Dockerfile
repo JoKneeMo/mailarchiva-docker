@@ -1,9 +1,9 @@
 FROM tomcat:jre8 as builder
 
 LABEL maintainer="JoKneeMo <https://github.com/JoKneeMo>"
-LABEL version="8.11.68"
+LABEL version="8.12.25"
 
-ARG MAILARCHIVA_VERSION=8.11.68
+ARG MAILARCHIVA_VERSION=8.12.25
 ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /build
@@ -12,9 +12,9 @@ RUN apt update && apt install -y \
     fontconfig-config \
     unzip
 
-RUN curl -so javax2jakarta https://dlcdn.apache.org/tomcat/jakartaee-migration/v1.0.6/binaries/jakartaee-migration-1.0.6-shaded.jar
+RUN curl -so javax2jakarta https://dlcdn.apache.org/tomcat/jakartaee-migration/v1.0.8/binaries/jakartaee-migration-1.0.8-shaded.jar
 
-RUN curl -so mailarchiva.war https://stimulussoft.b-cdn.net/mailarchiva_v${MAILARCHIVA_VERSION}.war
+RUN curl -so mailarchiva.war https://stimulussoft.b-cdn.net/mailarchiva-${MAILARCHIVA_VERSION}.war
 
 RUN java -jar javax2jakarta mailarchiva.war mailarchiva-jakarta.war
 
