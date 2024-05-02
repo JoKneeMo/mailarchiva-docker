@@ -1,0 +1,69 @@
+name: Update Dockerfile on New Release
+
+on:
+  schedule:
+    # Runs every 12 hours
+    - cron: '0 */12 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Install dependencies
+        run: |
+          pip install feedparser
+
+      - name: Check RSS Feed for new version
+        id: check_rss
+        run: |
+          import feedparser
+          import os
+          
+          # Path to Dockerfile
+          dockerfile_path = 'Dockerfile'
+          
+          # Parsing RSS Feed
+          feed = feedparser.parse('https://bs.stimulussoft.com/rss/product/maonprem')
+          latest_version = feed.entries[0].title
+          
+          # Reading the current version from Dockerfile
+          with open(dockerfile_path, 'r') as file:
+            content = file.readlines()
+          
+          current_version = [line for line in content if line.startswith('ARG MAILARCHIVA_VERSION=')][0].split('=')[1].strip()
+          
+          # Comparing versions
+          if latest_version != current_version:
+            print("::set-output name=new_version_exists::true")
+            print(f"::set-output name=latest_version::{latest_version}")
+            # Update the Dockerfile
+            with open(dockerfile_path, 'w') as file:
+              for line in content:
+                if 'ARG MAILARCHIVA_VERSION' in line:
+                  file.write(f'ARG MAILARCHIVA_VERSION={latest_version}\n')
+                elif 'LABEL version' in line:
+                  file.write(f'LABEL version="{latest_version}"\n')
+                else:
+                  file.write(line)
+          else:
+            print("::set-output name=new_version_exists::false")
+        
+        shell: python
+
+      - name: Commit and push if there's a new version
+        if: steps.check_rss.outputs.new_version_exists == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Dockerfile
+          git commit -m "Update Dockerfile to version ${{ steps.check_rss.outputs.latest_version }}"
+          git push
